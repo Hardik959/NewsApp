@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       home: Home(),
       debugShowCheckedModeBanner: false,
+
     );
   }
 }
@@ -26,7 +27,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
