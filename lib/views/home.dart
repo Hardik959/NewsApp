@@ -1,8 +1,12 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use, unnecessary_new, prefer_collection_literals, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, prefer_typing_uninitialized_variables, avoid_unnecessary_containers, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:news/Models/ArticleModel.dart';
 import 'package:news/Models/CategoryModel.dart';
 import 'package:news/helper/data.dart';
+import 'package:news/helper/news.dart';
+import 'package:news/views/Tiles/blogtile.dart';
+import 'package:news/views/Tiles/categorytile.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,12 +17,23 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<CategoryModel> categories = <CategoryModel>[];
-
+  List<ArticleModel> articles = <ArticleModel>[];
+  bool _loading = true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     categories = getCategories();
+    getNews();
+  }
+
+  getNews() async {
+    News newsclass = News();
+    await newsclass.getnews();
+    articles = newsclass.news;
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
@@ -42,69 +57,52 @@ class _HomeState extends State<Home> {
         ),
         elevation: 0.0,
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              height: 90,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    return CategoryTile(
-                      imageURL: categories[index].categoryURL,
-                      categoryName: categories[index].categoryName,
-                    );
-                  }),
+      body: _loading
+          ? Center(
+              child: Container(
+                child: CircularProgressIndicator(),
+              ),
             )
-          ],
-        ),
-      ),
-    );
-  }
-}
+          : SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  children: [
+                    // CATEGORIES
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      height: 90,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: categories.length,
+                          itemBuilder: (context, index) {
+                            return CategoryTile(
+                              imageURL: categories[index].categoryURL,
+                              categoryName: categories[index].categoryName,
+                            );
+                          }),
+                    ),
 
-class CategoryTile extends StatelessWidget {
-  final imageURL, categoryName;
-  CategoryTile({this.imageURL, this.categoryName});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: 16),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: Image.network(
-              imageURL,
-              width: 120,
-              height: 70,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-              color: Colors.black26,
-            ),
-            width: 120,
-            height: 70,
-            child: Text(
-              categoryName,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                letterSpacing: 0.5,
+                    //ARTICLES
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: ListView.builder(
+                        physics: ClampingScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: articles.length,
+                          itemBuilder: (context, index) {
+                            return BlogTile(
+                              imgURL: articles[index].urlToImage,
+                              title: articles[index].title,
+                              desc: articles[index].description,
+                            );
+                          }),
+                    ),
+                    // Articles
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
     );
   }
 }
