@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, deprecated_member_use, unnecessary_new, prefer_collection_literals, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, prefer_typing_uninitialized_variables, avoid_unnecessary_containers
+// ignore_for_file: prefer_const_constructors, deprecated_member_use, unnecessary_new, prefer_collection_literals, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, prefer_typing_uninitialized_variables, avoid_unnecessary_containers, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
 import 'package:news/Models/CategoryModel.dart';
@@ -42,23 +42,24 @@ class _HomeState extends State<Home> {
         ),
         elevation: 0.0,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              Container(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: categories.length,
-                    itemBuilder: (context, index) {
-                      return CategoryTile(
-                        imageURL: categories[index].categoryURL,
-                        categoryName: categories[index].categoryName,
-                      );
-                    }),
-              )
-            ],
-          ),
+      body: Container(
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              height: 90,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    return CategoryTile(
+                      imageURL: categories[index].categoryURL,
+                      categoryName: categories[index].categoryName,
+                    );
+                  }),
+            )
+          ],
         ),
       ),
     );
@@ -72,9 +73,36 @@ class CategoryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(right: 16),
       child: Stack(
         children: [
-          Image.network(imageURL),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: Image.network(
+              imageURL,
+              width: 120,
+              height: 70,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
+              color: Colors.black26,
+            ),
+            width: 120,
+            height: 70,
+            child: Text(
+              categoryName,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
         ],
       ),
     );
