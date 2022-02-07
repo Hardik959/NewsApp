@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors, prefer_const_constructors
 
 import 'dart:async';
 
@@ -20,6 +20,15 @@ class _ArticleViewState extends State<ArticleView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [Icon(Icons.abc)],
+        leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
         backgroundColor: Colors.white,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -38,15 +47,13 @@ class _ArticleViewState extends State<ArticleView> {
         elevation: 0.0,
       ),
       body: Container(
-      child: WebView(
-        initialUrl: widget.blogURL,
-        onWebViewCreated: ((WebViewController webViewController) {
-          _completer.complete(webViewController);
-        }),
+        child: WebView(
+          initialUrl: widget.blogURL,
+          onWebViewCreated: ((WebViewController webViewController) {
+            _completer.complete(webViewController);
+          }),
+        ),
       ),
-    ),
     );
-    
   }
 }
-   

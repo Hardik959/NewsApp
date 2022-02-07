@@ -11,7 +11,7 @@ class News {
 
   Future getnews() async {
     String url =
-        "https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=71c74a60b4464131a43d7d6ad10a00fe";
+        "https://newsapi.org/v2/top-headlines?country=in&apiKey=71c74a60b4464131a43d7d6ad10a00fe";
 
     var response = await http.get(Uri.parse(url));
     var jsonData = jsonDecode(response.body);
@@ -19,13 +19,37 @@ class News {
       jsonData["articles"].forEach((element) {
         if (element["urlToImage"] != null && element["description"] != null) {
           ArticleModel articleModel = ArticleModel(
-              
-              
               description: element["description"],
               title: element["title"],
               url: element["url"],
               urlToImage: element["urlToImage"]);
           news.add(articleModel);
+        }
+      });
+    }
+  }
+}
+
+class CategoryNewsClass {
+  List<ArticleModel> categorynews = [];
+  final String category;
+  CategoryNewsClass({required this.category});
+
+  Future getnews() async {
+    String url =
+        "https://newsapi.org/v2/top-headlines?country=in&category=$category&apiKey=71c74a60b4464131a43d7d6ad10a00fe";
+
+    var response = await http.get(Uri.parse(url));
+    var jsonData = jsonDecode(response.body);
+    if (jsonData['status'] == "ok") {
+      jsonData["articles"].forEach((element) {
+        if (element["urlToImage"] != null && element["description"] != null) {
+          ArticleModel articleModel = ArticleModel(
+              description: element["description"],
+              title: element["title"],
+              url: element["url"],
+              urlToImage: element["urlToImage"]);
+          categorynews.add(articleModel);
         }
       });
     }
