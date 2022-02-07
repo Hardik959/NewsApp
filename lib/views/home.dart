@@ -95,6 +95,7 @@ class _HomeState extends State<Home> {
                               imgURL: articles[index].urlToImage,
                               title: articles[index].title,
                               desc: articles[index].description,
+                              url: articles[index].url,
                             );
                           }),
                     ),
